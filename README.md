@@ -89,9 +89,9 @@ Methods
 
 For more information on Thwack's event system, see [Thwack events](#thwack-events) below.
 
-- `thwack.addEventListener(type: string,callback: (event:ThwackEvent) => void ): void;`
+- `thwack.addEventListener(type: string, callback: (event:ThwackEvent) => Promise<any> ): void;`
 
-- `thwack.removeEventListener(type: string,callback: (event:ThwackEvent) => void ): void;`
+- `thwack.removeEventListener(type: string, callback: (event:ThwackEvent) => Promise<any> ): void;`
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
@@ -333,6 +333,8 @@ Whenever any part of the application calls one of the data fetching methods, a `
 thwack.addEventListener('request', callback);
 ```
 
+> Note that callbacks can be `async` allowing you to defer Thwack so that you might, for example, go out and fetch data a different URL before proceeding.
+
 ### The `response` event
 
 The event is fired _after_ the HTTP headers are received, but _before_ the body is streamed and parsed. Listeners will receive a `ThwackResponseEvent` object with a `thwackResponse` key set to the response.
@@ -414,12 +416,19 @@ const App = () ={
 Let's say you have an app that has made a request for some user data. If the app is hitting a specific URL (say `users`) and querying for a particular user ID (say `123`), you would like to prevent the request from hitting the server and instead mock the results.
 
 ```js
-thwack.addEventListener('request', (event) => {
+thwack.addEventListener('request', async (event) => {
   const { options } = event;
   if (options.url === 'users' && options.params.id === 123) {
 
+    // tells Thwack to return `event.promise` instead of handling the event itself
+    event.preventDefault();
+
+    // stop other listeners (if any) from further processing
+    event.stopPropagation();
+
+    // because we called `preventDefault` above,
     // the caller's request will be resolved to this `ThwackResponse`
-    event.promise = Promise.resolve({
+    return {
       status: 200,
       ok: true
       headers: {
@@ -429,13 +438,7 @@ thwack.addEventListener('request', (event) => {
         name: 'Fake Username',
         email: 'fakeuser@example.com',
       }
-    });
-
-    // tells Thwack to return `event.promise` instead of handling the event itself
-    event.preventDefault();
-
-    // stop other listeners (if any) from further processing
-    event.stopPropagation();
+    };
   }
 });
 ```
