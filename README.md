@@ -19,11 +19,12 @@ TL;DR
 
 Thwack is:
 
-- 💻 Modern - Thwack is an HTTP data fetching solution built for modern browsers
+- 💻 Modern — Thwack is an HTTP data fetching solution built for modern browsers
 - 🔎 Small — Thwack is only ~1.5k gzipped
 - 👩‍🏫 Smarter — Built with modern JavaScript
 - 😘 Familiar — Thwack uses an Axios-like interface
-- 🅰️ Typed - Easier inclusion for TypeScript projects
+- 🅰️ Typed — Easier inclusion for TypeScript projects
+- ✨ Support for IE11 and NodeJS
 
 > This README is a work in progress. You can also ask me a question [on Twitter](https://twitter.com/donavon).
 
@@ -352,6 +353,42 @@ The event is fired after the body is streamed and parsed. It is fired only if th
 ### The `error` event
 
 The event is fired after the body is streamed and parsed. It is fired if the fetch returned a non-2xx status code. Listeners will receive a `ThwackErrorEvent` object with a `thwackResponse` key set to the response.
+
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+IE11
+</h2>
+
+If your app requires Internet Explorer 11 support, you can still use Thwack, but it will require polyfills for `Array#flat`, `Array#entries`, and `Object#fromEntries`. You can either provide these polyfills yourself, or use the following convenience import instead.
+
+```js
+import thwack from 'thwack/ie';
+```
+
+Note that this will work for any browser, not just IE11, but it will increase your bundle size slightly.
+
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+NodeJS
+</h2>
+
+Thwack will work on NodeJS, but requires a polyfill for `window.fetch`. Luckilly, there is a wonderful polyfill called [`node-fetch`](https://github.com/node-fetch/node-fetch) that you can use.
+
+If you are using NodeJS verson 10, you will also need a polyfill for `Array#flat` and `Object#fromEntries`. NodeJS version 11+ has these methods and does not require a polyfill.
+
+You can either provide these polyfills yourself, or use the one of the following convenience imports instead. If you are running NodeJS 11+, use:
+
+```js
+import thwack from 'thwack/node'; // NodeJS version 11+
+```
+
+If you are running on NodeJS 10, use:
+
+```js
+import thwack from 'thwack/node10'; // NodeJS version 10
+```
+
+> Note: The `responseType` of `blob` is not supported on NodeJS.
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
