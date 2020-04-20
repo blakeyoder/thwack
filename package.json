@@ -4,7 +4,7 @@
     "access": "public",
     "tag": "next"
   },
-  "version": "0.1.1-beta.2",
+  "version": "0.1.1-beta.3",
   "description": "A tiny modern data fetching solution.",
   "main": "dist/thwack.js",
   "umd:main": "dist/thwack.umd.js",
@@ -53,6 +53,10 @@
     "rimraf": "^3.0.2"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "**/src/**/*.js",
+      "!**/__test_utils__/**"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 100,

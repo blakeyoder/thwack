@@ -1,7 +1,8 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* istanbul ignore file */
 /* eslint-disable no-undef */
-import { defaultOptions } from './src/defaults';
-import deepSpreadOptions from './src/utils/deepSpreadOptions';
+import { defaultOptions } from '../src/defaults';
+import deepSpreadOptions from '../src/utils/deepSpreadOptions';
 import 'core-js/features/array/flat';
 import 'core-js/features/object/from-entries';
 import 'core-js/features/array/entries';
@@ -14,9 +15,8 @@ export const defaultFetchOptions = {
   headers: defaultHeaders,
 };
 
-export const mergeDefaults = (options, defaults = defaultOptions) => {
-  return deepSpreadOptions(defaults, options);
-};
+export const mergeDefaults = (options, defaults = defaultOptions) =>
+  deepSpreadOptions(defaults, options);
 
 export const createMockFetch = (options = {}) => {
   const {

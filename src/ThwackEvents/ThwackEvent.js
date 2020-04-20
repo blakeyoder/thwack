@@ -1,16 +1,16 @@
-// TODO make this extend CustomEvent and use EventTarget some day?
+// TODO make this extend CustomEvent and use EventTarget some day? Maybe?
 export default class ThwackEvent {
-  constructor(type) {
+  constructor(type, payload) {
     this.type = type;
     this.defaultPrevented = false;
     this.propagationStopped = false;
+    this._payload = payload;
   }
 
   preventDefault() {
     this.defaultPrevented = true;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   stopPropagation() {
     this.propagationStopped = true;
   }
