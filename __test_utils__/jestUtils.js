@@ -5,7 +5,6 @@ import { defaultOptions } from '../src/defaults';
 import deepSpreadOptions from '../src/utils/deepSpreadOptions';
 import 'core-js/features/array/flat';
 import 'core-js/features/object/from-entries';
-import 'core-js/features/array/entries';
 
 export const { headers: defaultHeaders } = defaultOptions;
 export const defaultBaseUrl = 'http://localhost/';
