@@ -87,6 +87,8 @@ Methods
 
 ### Event listeners
 
+Thwack supports the following event types: `request`, `response`, `data`, and `error`.
+
 For more information on Thwack's event system, see [Thwack events](#thwack-events) below.
 
 - `thwack.addEventListener(type: string, callback: (event:ThwackEvent) => Promise<any> ): void;`
@@ -180,6 +182,10 @@ http://example.com/orders/123
 ```
 
 If you don't specify a `:name`, or there are more `param`s than there are `:name`s, then the remaining key/values will be set as search parameters (i.e. `?key=value`).
+
+### `maxDepth`
+
+The maximum level of recursive requests that can be made before Thwack throws an error. This is used to prevent a event callback from causing a recursive loop if it issues another `request` without proper guards in place. Default = 5.
 
 ### `responseType`
 
@@ -339,6 +345,14 @@ thwack.addEventListener('request', callback);
 
 The event is fired _after_ the HTTP headers are received, but _before_ the body is streamed and parsed. Listeners will receive a `ThwackResponseEvent` object with a `thwackResponse` key set to the response.
 
+### The `data` event
+
+The event is fired after the body is streamed and parsed. It is fired only if the fetch returned a 2xx status code. Listeners will receive a `ThwackDataEvent` object with a `thwackResponse` key set to the response.
+
+### The `error` event
+
+The event is fired after the body is streamed and parsed. It is fired if the fetch returned a non-2xx status code. Listeners will receive a `ThwackErrorEvent` object with a `thwackResponse` key set to the response.
+
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 How to
@@ -428,7 +442,7 @@ thwack.addEventListener('request', async (event) => {
 
     // because we called `preventDefault` above,
     // the caller's request will be resolved to this `ThwackResponse`
-    return {
+    return new thwack.ThwackResponse({
       status: 200,
       ok: true
       headers: {
@@ -438,7 +452,7 @@ thwack.addEventListener('request', async (event) => {
         name: 'Fake Username',
         email: 'fakeuser@example.com',
       }
-    };
+    });
   }
 });
 ```
@@ -513,6 +527,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
